@@ -39,6 +39,8 @@ def toString(bord):
   string = ""
   for i in range(len(bord)):
     for x in range(9):
+      print(42)
+      print(bord[i][x].given)
       if bord[i][x].defAnswer == 0: s = "_"
       else: s = str(bord[i][x].defAnswer)
       string += s + ","

@@ -8,6 +8,7 @@ class cell:
     for i in range(1, 10): self.possible.append(i)
 
   def toString(self):
-    return self.value
+    if self.defAnswer != 0: return str(self.defAnswer)
+    else: return "_"
 
 c = cell()
