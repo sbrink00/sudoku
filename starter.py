@@ -44,15 +44,11 @@ def convertBoard1D(board):
 
 def returnIncorrectBoxes(board):
   outputs = []
-  for i in range(9): bools.append(False)
   for i in range(9):
     has = []
-    for i in range(9) has.append(False)
-    print("bools: " + str(bools))
+    for imstupid in range(9): has.append(False)
     for x in range(9):
-      #print(board[cliquesBox[i][x]].defAnswer)
       has[board[cliquesBox[i][x]].defAnswer - 1] = True
-    print(has)
     for z in range(9):
       if has[z] == False:
         outputs.append(i)
