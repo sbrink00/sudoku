@@ -44,13 +44,16 @@ def convertBoard1D(board):
 
 def returnIncorrectBoxes(board):
   outputs = []
-  bools = []
   for i in range(9): bools.append(False)
-  for i in range(len(cliquesBox)):
-    has = bools
-    for x in range(len(cliquesBox[i])):
+  for i in range(9):
+    has = []
+    for i in range(9) has.append(False)
+    print("bools: " + str(bools))
+    for x in range(9):
+      #print(board[cliquesBox[i][x]].defAnswer)
       has[board[cliquesBox[i][x]].defAnswer - 1] = True
-    for z in range(len(has)):
+    print(has)
+    for z in range(9):
       if has[z] == False:
         outputs.append(i)
         break
@@ -78,4 +81,4 @@ while i < len(ary):
     boards.append(convertBoard1D(createBoard(ary, i)))
     i += 10
   else: i += 1
-for board in boards: print(returnIncorrectBoxes(board))
+print(returnIncorrectBoxes(boards[1]))
