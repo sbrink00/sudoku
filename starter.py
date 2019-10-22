@@ -5,7 +5,6 @@ import sys
 def createBoard(ary, index):
   board = []
   for i in range(9): board.append([])
-  print(board)
   for i in range(index + 1, index + 10):
     for x in range(9):
       if ary[i][x] == "_": board[i - index - 1].append(cell())
@@ -43,6 +42,20 @@ def convertBoard1D(board):
       output.append(board[i][x])
   return output
 
+def returnIncorrectBoxes(board):
+  outputs = []
+  bools = []
+  for i in range(9): bools.append(False)
+  for i in range(len(cliquesBox)):
+    has = bools
+    for x in range(len(cliquesBox[i])):
+      has[board[cliquesBox[i][x]].defAnswer - 1] = True
+    for z in range(len(has)):
+      if has[z] == False:
+        outputs.append(i)
+        break
+  return outputs
+
 cliquesBox = [[0,1,2,9,10,11,18,19,20],\
 [3,4,5,12,13,14,21,22,23],\
 [6,7,8,15,16,17,24,25,26],\
@@ -65,5 +78,4 @@ while i < len(ary):
     boards.append(convertBoard1D(createBoard(ary, i)))
     i += 10
   else: i += 1
-
-print(boardsToString())
+for board in boards: print(returnIncorrectBoxes(board))
