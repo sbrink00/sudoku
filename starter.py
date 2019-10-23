@@ -73,7 +73,7 @@ def convertBoard1D(board):
 def returnIncorrectBoxes(board):
   rows = []
   nums = []
-  for i in range(9):
+  for i in range(27):
     has = []
     for imstupid in range(9): has.append(False)
     for x in range(9):
@@ -83,10 +83,12 @@ def returnIncorrectBoxes(board):
         rows.append(i)
         nums.append(z + 1)
         break
+    if len(rows) == 2: break
+  print(nums,rows)
   nums[0],nums[1] = nums[1],nums[0]
   return rows,nums
 
-def check(board):
+def find indices(board):
   rows,nums = returnIncorrectBoxes(board)
   print(rows,nums)
   indices = []
