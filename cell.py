@@ -10,5 +10,3 @@ class cell:
   def toString(self):
     if self.defAnswer != 0: return str(self.defAnswer)
     else: return "_"
-
-c = cell()

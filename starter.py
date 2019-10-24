@@ -1,6 +1,18 @@
-import readFile
-from cell import cell
+#! /usr/bin/python
 import sys
+
+class cell:
+
+  def __init__(self, gave = False, value = 0):
+    self.given = gave
+    self.defAnswer = value
+    self.prov = 0
+    self.possible = []
+    for i in range(1, 10): self.possible.append(i)
+
+  def toString(self):
+    if self.defAnswer != 0: return str(self.defAnswer)
+    else: return "_"
 
 Cliques=[[0,1,2,3,4,5,6,7,8],\
 [9,10,11,12,13,14,15,16,17],\
@@ -84,19 +96,35 @@ def returnIncorrectBoxes(board):
         nums.append(z + 1)
         break
     if len(rows) == 2: break
-  print(nums,rows)
   nums[0],nums[1] = nums[1],nums[0]
   return rows,nums
 
-def find indices(board):
+def findIndices(board):
   rows,nums = returnIncorrectBoxes(board)
-  print(rows,nums)
   indices = []
   for i in range(9):
     if board[Cliques[rows[0]][i]].defAnswer == nums[0]: indices.append(Cliques[rows[0]][i])
   for i in range(9):
     if board[Cliques[rows[1]][i]].defAnswer == nums[1]: indices.append(Cliques[rows[1]][i])
-  print(indices)
+  for i in range(2):
+    for x in range(2, 4):
+      swap(board, indices[i], indices[x])
+      if check(board): return [indices[i], indices[x]]
+      swap(board, indices[i], indices[x])
+  return ["ERROR"]
+
+def swap(board, idx1, idx2):
+  board[idx1],board[idx2] = board[idx2],board[idx1]
+
+def check(board):
+  for i in range(len(Cliques)):
+    has = []
+    for imstupid in range(9): has.append(False)
+    for x in range(9):
+      has[board[Cliques[i][x]].defAnswer - 1] = True
+    for z in range(9):
+      if has[z] == False: return False
+  return True
 
 
 file = open(sys.argv[1], "r")
@@ -112,4 +140,14 @@ while i < len(ary):
     i += 10
   else: i += 1
 #print(returnIncorrectBoxes(boards[1]))
-check(boards[1])
+answers = []
+for board in boards:
+  answers.append(findIndices(board))
+print(answers)
+file = open(sys.argv[2], "w")
+string = ""
+for answer in answers: string += str(answer[0]) + "," + str(answer[1]) + "\n"
+string = string[:-1]
+file.write(string)
+#print(check(boards[1]))
+#print(findIndices(boards[1]))
