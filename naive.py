@@ -183,7 +183,19 @@ def writeFile():
   file = open(sys.argv[2], "w")
   file.write(string)
 
-t1 = time.time()
+def writeFile2():
+  headings,boards = something()
+  file = open(sys.argv[2], "w")
+  string = ""
+  for i in range(len(boards)):
+    string += headings[i][0] + ": Time - "
+    startTime = time.time()
+    solve(boards[i])
+    totalTime = time.time() - startTime
+    global backtracks
+    string += str(round(totalTime, 2)) + ". Backtracks - " + str(backtracks) + ".\n"
+    backtracks = 0
+  string = string[:-1]
+  file.write(string)
+
 writeFile()
-print("Time: " + str(time.time() - t1))
-print("Backtracks: " + str(backtracks))
