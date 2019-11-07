@@ -1,10 +1,11 @@
+#! /usr/bin/python
 import sys
+import time
 class cell:
 
   def __init__(self, gave = False, value = 0):
     self.given = gave
     self.defAnswer = value
-    self.prov = 0
     self.possible = []
     for i in range(1, 10): self.possible.append(i)
 
@@ -12,16 +13,25 @@ class cell:
     if self.defAnswer != 0: return str(self.defAnswer)
     else: return "_"
 
-def toString1d(board):
+def toString2d(board):
   string = ""
-  for i in range(len(board)): string += board[i].toString() + ","
-  return string[:-1]
+  for i in range(len(board)):
+    cell = board[i]
+    string += str(cell.defAnswer)
+    if i % 9 == 8: string += "\n"
+    else: string += ","
+  return string
+
+def equals(b1, b2):
+  for i in range(81):
+    if b1[i].defAnswer != b2[i].defAnswer: return False
+  return True
 
 def boardsToString():
   string = ""
   for board in boards:
-    string += toString1d(board)
-    string += "\n\n"
+    string += toString2d(board)
+    string += "\n"
   return string
 
 def createBoard(ary, index):
@@ -41,6 +51,69 @@ def check(board):
     for z in range(9):
       if has[z] == False: return False
   return True
+
+def remove(list, val):
+  i = 0
+  while i < len(list):
+    if (list[i] == val):
+      del list[i]
+      i -= 1
+    i += 1
+
+def genRCB(i):
+  row = int(i / 9)
+  col = i % 9 + 9
+  box = 0
+  for x in range(18, 27):
+    if i in Cliques[x]: box = x
+  return row,col,box
+
+def modifyPossibilities(board):
+  for i in range(len(board)):
+    if not board[i].given:
+      row,col,box = genRCB(i)
+      for x in range(9):
+        val = board[Cliques[row][x]].defAnswer
+        if val != 0:
+          remove(board[i].possible, val)
+        val = board[Cliques[col][x]].defAnswer
+        if val != 0:
+          remove(board[i].possible, val)
+        val = board[Cliques[box][x]].defAnswer
+        if val != 0:
+          remove(board[i].possible, val)
+
+def addNum(board, num, square):
+  row,col,box = genRCB(square)
+  for x in range(9):
+    val = board[Cliques[row][x]].defAnswer
+    if val == num and Cliques[row][x] != square: return False
+    val = board[Cliques[col][x]].defAnswer
+    if val == num and Cliques[col][x] != square: return False
+    val = board[Cliques[box][x]].defAnswer
+    if val == num and Cliques[box][x] != square: return False
+  board[square].defAnswer = num
+  return True
+
+def removeNum(board, square):
+  board[square].defAnswer = 0
+  global backtracks
+  backtracks += 1
+
+def solve(board):
+  modifyPossibilities(board)
+  return solveHelper(board, 0)
+
+def solveHelper(board, square):
+  if square == 81: return True
+  if board[square].given:
+    if solveHelper(board, square + 1): return True
+  else:
+    for i in range(len(board[square].possible)):
+      if addNum(board, board[square].possible[i], square):
+        if solveHelper(board, square + 1): return True
+        removeNum(board, square)
+  return False
 
 Cliques=[[0,1,2,3,4,5,6,7,8],\
 [9,10,11,12,13,14,15,16,17],\
@@ -70,22 +143,47 @@ Cliques=[[0,1,2,3,4,5,6,7,8],\
 [57,58,59,66,67,68,75,76,77],\
 [60,61,62,69,70,71,78,79,80]]
 
-file = open(sys.argv[1], "r")
-ary = file.readlines()
-boards = []
-for i in range(len(ary)):
-  ary[i] = ary[i].replace("\n", "")
-  ary[i] = ary[i].split(",")
-i = 0
-while i < len(ary):
-  if len(ary[i]) == 3:
-    boards.append(createBoard(ary, i))
-    i += 10
-  else: i += 1
-print(boardsToString())
-print(check(boards[1]))
-#to get Cliques
-#row:
-#column: position mod 9
-#box:
-print(10%9)
+backtracks = 0
+
+def something():
+  file = open(sys.argv[1], "r")
+  ary = file.readlines()
+  boards = []
+  headings = []
+  for i in range(len(ary)):
+    ary[i] = ary[i].replace("\n", "")
+    ary[i] = ary[i].split(",")
+  i = 0
+  while i < len(ary):
+    if len(ary[i]) == 3:
+      headings.append(ary[i])
+      boards.append(createBoard(ary, i))
+      i += 10
+    else: i += 1
+  return headings,boards
+
+def findAndSolve():
+  headings,boards = something()
+  heading = sys.argv[3]
+  for i in range(len(headings)):
+    if heading in headings[i][0]:
+      return i,headings,boards
+  return 0,headings,boards
+
+def solveBoard():
+  boardNum,headings,boards = findAndSolve()
+  solve(boards[boardNum])
+  return boardNum,headings,boards
+
+def writeFile():
+  num,headings,boards = solveBoard()
+  heading = str(headings[num][0]) + "," + str(headings[num][1]) + "," + "solved\n"
+  board = toString2d(boards[num])
+  string = board[:-1]
+  file = open(sys.argv[2], "w")
+  file.write(string)
+
+t1 = time.time()
+writeFile()
+print("Time: " + str(time.time() - t1))
+print("Backtracks: " + str(backtracks))
