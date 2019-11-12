@@ -198,4 +198,9 @@ def writeFile2():
   string = string[:-1]
   file.write(string)
 
+headings,boards = something()
+t1 = time.time()
+solve(boards[6])
+print("Naive Time: " + str(time.time() - t1))
+
 writeFile()

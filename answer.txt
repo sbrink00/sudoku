@@ -1,9 +1,0 @@
-A1-1: Time - 0.0. Backtracks - 260.
-A2-1: Time - 0.5. Backtracks - 27917.
-A3-1: Time - 0.1. Backtracks - 10616.
-A4-1: Time - 0.5. Backtracks - 39975.
-A5-1: Time - 0.1. Backtracks - 6964.
-A6-1: Time - 0.8. Backtracks - 49498.
-A7-1: Time - 50.3. Backtracks - 2482069.
-A8-1: Time - 480.2. Backtracks - 19029872.
-A9-1: Time - 581.5. Backtracks - 26819920.
