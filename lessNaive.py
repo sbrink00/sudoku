@@ -71,6 +71,16 @@ class Pqueue:
 
 #METHODS _______________________________________________________________________
 
+def check(board):
+  for i in range(len(Cliques)):
+    has = []
+    for imstupid in range(9): has.append(False)
+    for x in range(9):
+      has[board[Cliques[i][x]].defAnswer - 1] = True
+    for z in range(9):
+      if has[z] == False: return False
+  return True
+
 def boardsToString():
   string = ""
   for board in boards:
@@ -167,17 +177,20 @@ def removeNum(board, square):
   board[square].defAnswer = 0
 
 def makeOrderedCells(board):
-  cellheap = Pqueue(comparator)
+  orderedCells = []
   for i in range(len(board)):
-    if not board[i].definite: cellheap.push(boards[0][i])
-  orderedCells = cellheap.getOrderedList()
+    if not board[i].definite: orderedCells.append(board[i])
+  cellheap = Pqueue(comparator)
+    for i in range(len(board)):
+      if not board[i].definite: cellheap.push(boards[0][i])
+    orderedCells = cellheap.getOrderedList()
   return orderedCells
 
 def solve(board):
   #addForcedValues(board)
   squares = makeOrderedCells(board)
   print(orderedCellsToString(squares))
-  print(toString2d(board))
+  #print(toString2d(board))
   return solveHelper(board, 0, squares)
 
 def solveHelper(board, n, squares):
@@ -239,7 +252,16 @@ headings = []
 boards = []
 something()
 
+cell1 = cell(1)
+cell2 = cell(1)
+# print(comparator(cell2, cell1))
+# del cell1.possible[1]
+# print(cell1.possible)
+# print(cell2.possible)
+
+
 t1 = time.time()
-solve(boards[0])
+solve(boards[6])
 print("Less naive time: " + str(time.time() - t1))
-print(toString2d(boards[0]))
+print(toString2d(boards[6]))
+print(check(boards[6]))
