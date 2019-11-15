@@ -105,7 +105,7 @@ def solve(board):
   return solveHelper(board, 0)
 
 def solveHelper(board, square):
-  if square == 81: return True
+  if square == len(board): return True
   if board[square].given:
     if solveHelper(board, square + 1): return True
   else:
@@ -203,4 +203,4 @@ t1 = time.time()
 solve(boards[6])
 print("Naive Time: " + str(time.time() - t1))
 
-writeFile()
+writeFile2()

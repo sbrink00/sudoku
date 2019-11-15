@@ -1,4 +1,4 @@
-#tasks: dictionary, sorting cells, maybe other stuff
+#tasks: dictionary, sorting cells, randomize possible, count how many times # used, maybe other stuff
 import sys
 import time
 #CELL __________________________________________________________________________
@@ -178,27 +178,38 @@ def removeNum(board, square):
   board[square].defAnswer = 0
 
 def makeOrderedCells(board):
+  known = []
   cellheap = Pqueue(comparator)
   for i in range(len(board)):
     if not board[i].definite: cellheap.push(board[i])
-  orderedCells = cellheap.getOrderedList()
+    else: known.append(board[i])
+  orderedCells = cellheap.getOrderedList() + known
   return orderedCells
 
 def solve(board):
-  t1 = time.time()
-  addForcedValues(board)
+  #addForcedValues(board)
   squares = makeOrderedCells(board)
-  for i in squares: print(i.num)
-  return solveHelper(board, 0, squares)
+  return solveHelper(board, squares, 0)
 
-def solveHelper(board, n, squares):
-  #print(n)
-  if n == len(squares): return True
-  for i in range(len(squares[n].possible)):
-    if addNum(board, squares[n].possible[i], squares[n].num):
-      if solveHelper(board, n + 1, squares): return True
-      removeNum(board, squares[n].num)
+def solveHelper(board, cells, n):
+  if n == len(board): return True
+  if cells[n].definite:
+    if solveHelper(board, cells, n + 1): return True
+  else:
+    for i in range(len(cells[n].possible)):
+      if addNum(board, cells[n].possible[i], cells[n].num):
+        if solveHelper(board, cells, n + 1): return True
+        removeNum(board, cells[n].num)
   return False
+
+# def solveHelper(board, n, squares):
+#   #print(n)
+#   if n == len(squares): return True
+#   for i in range(len(squares[n].possible)):
+#     if addNum(board, squares[n].possible[i], squares[n].num):
+#       if solveHelper(board, n + 1, squares): return True
+#       removeNum(board, squares[n].num)
+#   return False
 
 
 def something():
